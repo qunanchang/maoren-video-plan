@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>猫人内衣抖音 - 短视频周度每日计划表 (拍摄与素材管理)</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #c7000b; /* 猫人红 */
+            margin-bottom: 10px; /* Reduced margin */
+        }
+        .header-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .export-button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #e60012; /* 猫人红 */
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+        .date-header {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            color: #555;
+            text-align: center;
+        }
+        .module-header {
+            font-weight: bold;
+            color: #c7000b;
+        }
+        .sub-table {
+            width: 100%;
+            margin-top: 5px;
+            border-collapse: collapse;
+        }
+        .sub-table th, .sub-table td {
+            border: 1px solid #e0e0e0;
+            padding: 6px 8px;
+            font-size: 0.9em;
+        }
+        .sub-table th {
+            background-color: #fce4e4; /* Lighter red for sub-headers */
+            color: #333;
+        }
+        textarea, input[type="text"], input[type="time"], select {
+            width: 98%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 0.95em;
+        }
+        textarea {
+            min-height: 50px;
+        }
+        .status-select select {
+            width: auto;
+        }
+        .small-text { font-size: 0.9em; color: #777; }
+        .highlight { color: #c7000b; font-weight: bold;}
+    </style>
+</head>
+<body>
+
+    <h1>猫人内衣抖音 - 短视频周度每日计划表 (拍摄与素材管理)</h1>
+    <p style="text-align:center;" class="small-text"><strong>周次：</strong> <input type="text" class="small-text" id="weekInfoInput" value="例如：2024年第21周 (YYYY.MM.DD - YYYY.MM.DD)" style="width:300px; border:none; text-align:center;"> | <strong>制表人：</strong> <input type="text" class="small-text" id="reporterNameInput" value="[您的名字]" style="width:100px; border:none; text-align:center;"></p>
+    <div class="header-controls">
+        <button onclick="exportTableToCSV('weeklyPlanTable', '猫人抖音周计划.csv')" class="export-button">导出为CSV (Excel)</button>
+    </div>
+
+    <table id="weeklyPlanTable">
+        <thead>
+            <tr>
+                <th style="width:12%;">日期</th>
+                <th style="width:20%;">核心工作模块</th>
+                <th style="width:58%;">具体内容与计划详情</th>
+                <th style="width:10%;">状态/备注</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 星期一 (拍摄日) -->
+            <tr>
+                <td rowspan="4" class="date-header"><strong>星期一 (拍摄日)</strong><br><input type="text" value="[MM.DD]" style="width:60px; border:none; text-align:center;" data-export="true" data-label="日期详情"></td>
+                <td class="module-header">1. 拍摄前准备与确认</td>
+                <td>
+                    <textarea placeholder="例：与模特/主播最后确认脚本与情绪表达；检查所有拍摄产品（款号、尺码、平整度）；核对道具清单与场景布置；设备最终检查（电量、存储卡、灯光、收音）。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="已完成">已完成</option>
+                        <option value="待完成">待完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">2. 上午拍摄执行<br><input type="time" value="09:00" data-export="true" data-label="上午开始"> - <input type="time" value="12:00" data-export="true" data-label="上午结束"></td>
+                <td>
+                    <p class="small-text"><strong>拍摄主题/系列：</strong> <input type="text" placeholder="例：夏季新品 - 舒适体感" data-export="true" data-label="拍摄主题/系列"></p>
+                    <table class="sub-table" data-export-subtable="true" data-subtable-prefix="上午拍摄详情_">
+                        <thead><tr><th>脚本/镜头ID</th><th>产品(款号/卖点)</th><th>模特/主播</th><th>场景/景别</th><th>核心道具/服装</th><th>预计时长/关键帧</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="S01_L01" data-export="true"></td>
+                                <td><textarea placeholder="款号：XXXX\n卖点：冰爽透气, 轻如无物" data-export="true"></textarea></td>
+                                <td><input type="text" placeholder="模特A" data-export="true"></td>
+                                <td><textarea placeholder="卧室/中近景, 特写" data-export="true"></textarea></td>
+                                <td><textarea placeholder="羽毛, 风扇/浅色睡袍" data-export="true"></textarea></td>
+                                <td><textarea placeholder="15秒/羽毛拂过, 面料细节" data-export="true"></textarea></td>
+                            </tr>
+                            <!-- 可增加更多上午拍摄的镜头 -->
+                        </tbody>
+                    </table>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待拍摄">待拍摄</option>
+                        <option value="拍摄中">拍摄中</option>
+                        <option value="已完成">已完成</option>
+                    </select><textarea placeholder="上午拍摄备注：" data-export="true"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">3. 下午拍摄执行<br><input type="time" value="13:30" data-export="true" data-label="下午开始"> - <input type="time" value="17:00" data-export="true" data-label="下午结束"></td>
+                <td>
+                    <p class="small-text"><strong>拍摄主题/系列：</strong> <input type="text" placeholder="例：主播口播 - 爆款A" data-export="true" data-label="拍摄主题/系列"></p>
+                     <table class="sub-table" data-export-subtable="true" data-subtable-prefix="下午拍摄详情_">
+                        <thead><tr><th>脚本/镜头ID</th><th>产品(款号/卖点)</th><th>模特/主播</th><th>场景/景别</th><th>核心道具/服装</th><th>预计时长/关键帧</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="KB01_P01" data-export="true"></td>
+                                <td><textarea placeholder="款号：ZZZZ (爆款A)\n卖点：聚拢效果好, 舒适承托, 限时优惠" data-export="true"></textarea></td>
+                                <td><input type="text" placeholder="主播X" data-export="true"></td>
+                                <td><textarea placeholder="直播间背景/中近景" data-export="true"></textarea></td>
+                                <td><textarea placeholder="产品实物, 提示板" data-export="true"></textarea></td>
+                                <td><textarea placeholder="45秒/卖点清晰, 优惠强调" data-export="true"></textarea></td>
+                            </tr>
+                            <!-- 可增加更多下午拍摄的镜头 -->
+                        </tbody>
+                    </table>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待拍摄">待拍摄</option>
+                        <option value="拍摄中">拍摄中</option>
+                        <option value="已完成">已完成</option>
+                    </select><textarea placeholder="下午拍摄备注：" data-export="true"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">4. 拍摄后整理与备份</td>
+                <td>
+                    <textarea placeholder="例：收集周一拍摄素材，按规范命名；素材初步筛选，标记可用/NG片段；原始素材备份至指定服务器/硬盘；清理拍摄场地，归还道具。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待完成">待完成</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+
+            <!-- 星期二 (素材管理日) -->
+            <tr>
+                <td rowspan="4" class="date-header"><strong>星期二 (素材管理日)</strong><br><input type="text" value="[MM.DD]" style="width:60px; border:none; text-align:center;" data-export="true" data-label="日期详情"></td>
+                <td class="module-header">1. 素材整理与分类</td>
+                <td>
+                    <textarea placeholder="例：整理周一拍摄的全部素材，按项目/产品/类型进行文件夹分类；对素材进行标签化管理（如：#舒适 #聚拢 #夏季 #模特A #场景居家）；清理无效/重复素材。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">2. 素材初审与筛选</td>
+                <td>
+                    <textarea placeholder="例：快速浏览周一拍摄素材，筛选出优质可用片段；标记需要补拍或有瑕疵的镜头；与剪辑师初步沟通剪辑方向和重点素材。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">3. 盘点素材缺口</td>
+                <td>
+                    <textarea placeholder="例：根据本周及下周内容规划，对照现有素材库，盘点缺失的素材类型/主题/产品；明确需要通过下次拍摄（周三/周五）补充的镜头。例如：缺失产品C的场景化演示素材，需要补充模特B的口播版本。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">4. 周三拍摄筹备</td>
+                <td>
+                    <textarea placeholder="例：根据素材缺口盘点结果，调整/新增周三的拍摄脚本；确认周三拍摄所需的模特、场地、道具等资源；准备周三拍摄的详细清单。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+
+            <!-- 星期三 (拍摄日) -->
+             <tr>
+                <td rowspan="4" class="date-header"><strong>星期三 (拍摄日)</strong><br><input type="text" value="[MM.DD]" style="width:60px; border:none; text-align:center;" data-export="true" data-label="日期详情"></td>
+                <td class="module-header">1. 拍摄前准备与确认</td>
+                <td>
+                    <textarea placeholder="例：针对周二盘点的缺口和新脚本，与团队最终确认；检查拍摄所需各项资源。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="已完成">已完成</option>
+                        <option value="待完成">待完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">2. 上午拍摄执行<br><input type="time" value="09:00" data-export="true" data-label="上午开始"> - <input type="time" value="12:00" data-export="true" data-label="上午结束"></td>
+                <td>
+                    <p class="small-text"><strong>拍摄主题/系列：</strong> <input type="text" placeholder="例：创意短剧/痛点解决" data-export="true" data-label="拍摄主题/系列"></p>
+                     <table class="sub-table" data-export-subtable="true" data-subtable-prefix="上午拍摄详情_">
+                        <thead><tr><th>脚本/镜头ID</th><th>产品(款号/卖点)</th><th>模特/主播</th><th>场景/景别</th><th>核心道具/服装</th><th>预计时长/关键帧</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="CJ01_S01" data-export="true"></td>
+                                <td><textarea placeholder="款号：通用夏季款\n卖点：透气, 防闷热 (反向)" data-export="true"></textarea></td>
+                                <td><input type="text" placeholder="模特B, 模特C" data-export="true"></td>
+                                <td><textarea placeholder="模拟办公室/中景" data-export="true"></textarea></td>
+                                <td><textarea placeholder="汗湿普通内衣 (示意)" data-export="true"></textarea></td>
+                                <td><textarea placeholder="15秒/尴尬情景演绎" data-export="true"></textarea></td>
+                            </tr>
+                            <!-- 可增加更多上午拍摄的镜头 -->
+                        </tbody>
+                    </table>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待拍摄">待拍摄</option>
+                        <option value="拍摄中">拍摄中</option>
+                        <option value="已完成">已完成</option>
+                    </select><textarea placeholder="上午拍摄备注：" data-export="true"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">3. 下午拍摄执行<br><input type="time" value="13:30" data-export="true" data-label="下午开始"> - <input type="time" value="17:00" data-export="true" data-label="下午结束"></td>
+                <td>
+                    <p class="small-text"><strong>拍摄主题/系列：</strong> <input type="text" placeholder="例：补充素材/新品测试" data-export="true" data-label="拍摄主题/系列"></p>
+                    <table class="sub-table" data-export-subtable="true" data-subtable-prefix="下午拍摄详情_">
+                        <thead><tr><th>脚本/镜头ID</th><th>产品(款号/卖点)</th><th>模特/主播</th><th>场景/景别</th><th>核心道具/服装</th><th>预计时长/关键帧</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="TD01_L01 (对比前)" data-export="true"></td>
+                                <td><textarea placeholder="款号：调整型QQQQ\n卖点：收副乳, 改善外扩" data-export="true"></textarea></td>
+                                <td><input type="text" placeholder="模特D" data-export="true"></td>
+                                <td><textarea placeholder="试衣间/胸部特写, 侧面" data-export="true"></textarea></td>
+                                <td><textarea placeholder="普通不合身内衣/紧身背心" data-export="true"></textarea></td>
+                                <td><textarea placeholder="10秒/清晰展示痛点" data-export="true"></textarea></td>
+                            </tr>
+                            <!-- 可增加更多下午拍摄的镜头 -->
+                        </tbody>
+                    </table>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待拍摄">待拍摄</option>
+                        <option value="拍摄中">拍摄中</option>
+                        <option value="已完成">已完成</option>
+                    </select><textarea placeholder="下午拍摄备注：" data-export="true"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">4. 拍摄后整理与备份</td>
+                <td>
+                    <textarea placeholder="例：收集周三拍摄素材，按规范命名；素材初步筛选；原始素材备份；场地清理。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待完成">待完成</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+
+            <!-- 星期四 (素材管理日) -->
+            <tr>
+                <td rowspan="4" class="date-header"><strong>星期四 (素材管理日)</strong><br><input type="text" value="[MM.DD]" style="width:60px; border:none; text-align:center;" data-export="true" data-label="日期详情"></td>
+                 <td class="module-header">1. 素材整理与分类 (周三产出)</td>
+                <td>
+                    <textarea placeholder="例：整理周三拍摄的全部素材，进行分类和标签化管理。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">2. 素材复盘与深度分析</td>
+                <td>
+                    <textarea placeholder="例：对本周已拍摄素材进行整体复盘，评估质量和多样性；结合跑量数据（如有），分析哪些类型的镜头/创意表现更好；总结拍摄过程中的经验和待改进点。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">3. 再次盘点素材缺口 (精细化)</td>
+                <td>
+                    <textarea placeholder="例：基于本周已拍摄内容，更精细化地盘点素材库，找出更细微的缺口。例如：是否缺少特定肤色/身形模特的素材？特定场景下的产品表现？为周五的补拍或下周拍摄提供更具体的方向。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">4. 周五拍摄/下周拍摄规划</td>
+                <td>
+                    <textarea placeholder="例：制定周五补拍/重点拍摄的详细计划；初步构思下周的拍摄主题和脚本方向；协调下周拍摄可能需要的特殊资源。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+
+            <!-- 星期五 (拍摄日/灵活调整) -->
+            <tr>
+                <td rowspan="4" class="date-header"><strong>星期五 (拍摄日/灵活调整)</strong><br><input type="text" value="[MM.DD]" style="width:60px; border:none; text-align:center;" data-export="true" data-label="日期详情"></td>
+                <td class="module-header">1. 拍摄前准备与确认</td>
+                <td>
+                    <textarea placeholder="例：根据周四规划，确认今日拍摄任务（如补拍、重点创意、新品试拍等）。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="已完成">已完成</option>
+                        <option value="待完成">待完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">2. 上午/全天拍摄执行</td>
+                <td>
+                    <p class="small-text"><strong>拍摄主题/系列：</strong> <input type="text" placeholder="例：补拍镜头/品牌调性素材" data-export="true" data-label="拍摄主题/系列"></p>
+                    <table class="sub-table" data-export-subtable="true" data-subtable-prefix="拍摄详情_">
+                        <thead><tr><th>脚本/镜头ID</th><th>产品(款号/卖点)</th><th>模特/主播</th><th>场景/景别</th><th>核心道具/服装</th><th>预计时长/关键帧</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="BP01_L01" data-export="true"></td>
+                                <td><textarea placeholder="需补拍的产品/卖点" data-export="true"></textarea></td>
+                                <td><input type="text" placeholder="对应模特/主播" data-export="true"></td>
+                                <td><textarea placeholder="对应场景/景别" data-export="true"></textarea></td>
+                                <td><textarea placeholder="对应道具/服装" data-export="true"></textarea></td>
+                                <td><textarea placeholder="对应时长/关键帧" data-export="true"></textarea></td>
+                            </tr>
+                            <!-- 可增加更多拍摄镜头 -->
+                        </tbody>
+                    </table>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待拍摄">待拍摄</option>
+                        <option value="拍摄中">拍摄中</option>
+                        <option value="已完成">已完成</option>
+                    </select><textarea placeholder="拍摄备注：" data-export="true"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">3. 拍摄后整理与备份</td>
+                <td>
+                    <textarea placeholder="例：收集周五拍摄素材，命名备份；场地清理。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待完成">待完成</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="module-header">4. 本周工作总结与下周计划初稿</td>
+                <td>
+                    <textarea placeholder="例：总结本周整体拍摄与素材管理工作；输出本周产出清单；初步拟定下周工作重点和拍摄计划。" data-export="true"></textarea>
+                </td>
+                <td class="status-select"><select data-export="true">
+                        <option value="待开始">待开始</option>
+                        <option value="进行中">进行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </td>
+            </tr>
+             <tr>
+                <td colspan="4" style="text-align:center; padding:15px;">
+                    <strong class="highlight">【本周总体目标与总结】</strong><br>
+                    <textarea placeholder="例：本周共完成X个拍摄日，产出Y个主题系列素材，Z个镜头。素材库新增/优化情况...。下周需重点关注..." style="min-height: 40px; width:90%; margin-top:5px;" data-export="true" data-label="本周总体目标与总结"></textarea>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="margin-top:20px;">
+        <h3 style="color:#c7000b;">通用提醒:</h3>
+        <ul>
+            <li><strong>拍摄日：</strong>脚本为王，细节决定成败，沟通顺畅，多拍保底，关注声音。</li>
+            <li><strong>素材管理日：</strong>分类清晰，标签准确，及时盘点，为拍摄提供明确指引。</li>
+            <li><strong>灵活调整：</strong>计划是指导，实际工作中可根据突发情况和紧急需求灵活调整。</li>
+            <li><strong>导出CSV前：</strong>请确保所有需要导出的输入框和文本框内容已填写或调整为您需要导出的最终文本。</li>
+        </ul>
+    </div>
+
+<script>
+function escapeCSVValue(value) {
+    if (value === null || value === undefined) {
+        return '';
+    }
+    let stringValue = String(value);
+    // Replace newline characters with a space or a specific placeholder if needed,
+    // as CSV newlines define new rows. For simplicity, we replace with space.
+    stringValue = stringValue.replace(/\r?\n|\r/g, " "); // Replace newlines with spaces
+    // If the string contains a comma, a double quote, enclose it in double quotes.
+    // Also, any double quote character within the string must be escaped by a preceding double quote.
+    if (stringValue.search(/("|,)/g) >= 0) {
+        stringValue = '"' + stringValue.replace(/"/g, '""') + '"';
+    }
+    return stringValue;
+}
+
+function getElementValueForExport(element) {
+    if (!element) return '';
+    if (element.hasAttribute('data-export') || element.closest('[data-export-subtable="true"]')) {
+        if (element.tagName === 'TEXTAREA' || (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'time'))) {
+            return element.value;
+        }
+        if (element.tagName === 'SELECT') {
+            return element.options[element.selectedIndex].text;
+        }
+        // For other elements, like <p> or <td> itself if it's not an input
+        return element.textContent || element.innerText || '';
+    }
+    return ''; // Don't export if no data-export attribute
+}
+
+function exportTableToCSV(tableId, filename) {
+    let csvRows = [];
+    const table = document.getElementById(tableId);
+    if (!table) {
+        console.error("Table with ID '" + tableId + "' not found.");
+        return;
+    }
+
+    // Add header info from input fields
+    const weekInfo = document.getElementById('weekInfoInput') ? document.getElementById('weekInfoInput').value : '';
+    const reporterName = document.getElementById('reporterNameInput') ? document.getElementById('reporterNameInput').value : '';
+    csvRows.push([escapeCSVValue('周次: ' + weekInfo), escapeCSVValue('制表人: ' + reporterName)].join(','));
+    csvRows.push(''); // Add a blank line for separation
+
+    // Process table headers
+    const headerRow = table.querySelector('thead tr');
+    let csvHeader = [];
+    headerRow.querySelectorAll('th').forEach(th => {
+        csvHeader.push(escapeCSVValue(th.innerText));
+    });
+    csvRows.push(csvHeader.join(','));
+
+    // Process table body
+    const bodyRows = table.querySelectorAll('tbody > tr');
+    let currentRowData = new Array(csvHeader.length).fill(''); // To handle rowspan correctly
+
+    bodyRows.forEach(tr => {
+        let cellIndex = 0;
+        let isFirstCellOfRowspan = true; // Flag for date column with rowspan
+        let subTableDataStrings = []; // To collect subtable data for the current main row
+
+        tr.querySelectorAll('td').forEach((td, tdIndex) => {
+            // Find the correct column index in CSV, skipping already filled cells from rowspan
+            while (currentRowData[cellIndex] !== '') {
+                cellIndex++;
+                if (cellIndex >= csvHeader.length) break; // Safety break
+            }
+            if (cellIndex >= csvHeader.length) return; // Should not happen with correct HTML
+
+            let cellContent = "";
+            let mainCellText = "";
+
+            if (td.hasAttribute('rowspan') && isFirstCellOfRowspan) {
+                 const dateStrong = td.querySelector('strong');
+                 const dateInput = td.querySelector('input[type="text"][data-export="true"]');
+                 mainCellText = (dateStrong ? dateStrong.innerText.trim() : '') + (dateInput ? '\n' + dateInput.value : '');
+                 isFirstCellOfRowspan = false; // Only process the first cell of a rowspan group for this column
+            } else if (!td.hasAttribute('rowspan')) { // For normal cells or subsequent cells of a rowspan
+                 isFirstCellOfRowspan = true; // Reset for next potential rowspan in this column for next TR
+            }
+
+
+            // Get content from direct exportable elements within the TD
+            td.querySelectorAll('[data-export="true"]').forEach(el => {
+                let label = el.dataset.label ? el.dataset.label + ": " : "";
+                if (el.tagName === 'P' && el.classList.contains('small-text') && el.querySelector('input[data-export="true"]')) {
+                    // Special case for "拍摄主题/系列" which is a <p> wrapping an <input>
+                    mainCellText += (mainCellText ? "\n" : "") + label + getElementValueForExport(el.querySelector('input[data-export="true"]'));
+                } else if (el.tagName !== 'INPUT' || el.type !== 'time' || !el.previousElementSibling || el.previousElementSibling.tagName !== 'INPUT' || el.previousElementSibling.type !== 'time') {
+                    // Avoid double-counting time inputs if they are part of a range
+                     mainCellText += (mainCellText ? "\n" : "") + label + getElementValueForExport(el);
+                }
+            });
+             // For time ranges (like 09:00 - 12:00)
+            const timeInputs = Array.from(td.querySelectorAll('input[type="time"][data-export="true"]'));
+            if (timeInputs.length === 2) {
+                mainCellText += (mainCellText ? "\n" : "") + (timeInputs[0].dataset.label || '') + timeInputs[0].value + " - " + (timeInputs[1].dataset.label || '') + timeInputs[1].value;
+            } else if (timeInputs.length === 1) { // Single time input
+                 mainCellText += (mainCellText ? "\n" : "") + (timeInputs[0].dataset.label || '') + timeInputs[0].value;
+            }
+
+
+            // Get content from sub-tables
+            td.querySelectorAll('table.sub-table[data-export-subtable="true"]').forEach(subTable => {
+                const prefix = subTable.dataset.subtablePrefix || "拍摄详情_";
+                const subHeaderRow = subTable.querySelector('thead tr');
+                let subHeaders = [];
+                if (subHeaderRow) {
+                    subHeaderRow.querySelectorAll('th').forEach(th => subHeaders.push(th.innerText.trim()));
+                }
+
+                subTable.querySelectorAll('tbody tr').forEach((subTr, subRowIndex) => {
+                    let subRowContent = [];
+                    subTr.querySelectorAll('td').forEach((subTd, subTdIndex) => {
+                        const inputElement = subTd.querySelector('input, textarea, select');
+                        let value = getElementValueForExport(inputElement || subTd); // Prioritize input value
+                        subRowContent.push((subHeaders[subTdIndex] || `列${subTdIndex+1}`) + ": " + value);
+                    });
+                    subTableDataStrings.push(prefix + `行${subRowIndex+1}: ` + subRowContent.join(' | '));
+                });
+            });
+
+            if (subTableDataStrings.length > 0) {
+                mainCellText += (mainCellText ? "\n" : "") + subTableDataStrings.join("\n");
+            }
+            
+            // If after all that, mainCellText is still empty for a non-rowspan cell, and it's not a date cell yet handled
+            if (!mainCellText && !td.hasAttribute('rowspan') && !td.classList.contains('date-header')) {
+                 // This case might need refinement if there are other non-input text to capture.
+                 // For now, we rely on data-export attributes.
+                 const moduleHeader = td.classList.contains('module-header') ? td.innerText.trim() : '';
+                 if (moduleHeader) mainCellText = moduleHeader;
+
+            } else if (td.classList.contains('module-header') && !mainCellText) { // Capture module header text if no inputs
+                mainCellText = td.innerText.trim();
+            }
+
+
+            currentRowData[cellIndex] = escapeCSVValue(mainCellText.trim());
+
+            if (td.hasAttribute('rowspan')) {
+                const span = parseInt(td.getAttribute('rowspan'));
+                for (let k = 1; k < span; k++) {
+                    // Mark cells below the rowspan start as "occupied" for this column,
+                    // but they will be filled by subsequent rows.
+                    // This logic is tricky for CSV conversion.
+                    // A simpler approach is to just output the value for the first row of the span.
+                }
+            }
+            cellIndex++;
+        });
+        csvRows.push(currentRowData.join(','));
+        // Reset for next row, cells not part of a rowspan spanning to this row will be empty strings
+        currentRowData = new Array(csvHeader.length).fill('');
+    });
+    
+    // Add footer Reminders (simplified)
+    const remindersDiv = document.querySelector('div[style="margin-top:20px;"]');
+    if (remindersDiv) {
+        csvRows.push(''); // Blank line
+        csvRows.push(escapeCSVValue(remindersDiv.querySelector('h3').innerText));
+        const reminderItems = remindersDiv.querySelectorAll('ul li');
+        reminderItems.forEach(item => {
+            csvRows.push(escapeCSVValue('- ' + item.innerText));
+        });
+    }
+
+    downloadCSV(csvRows.join('\n'), filename);
+}
+
+function downloadCSV(csvContent, filename) {
+    const csvFile = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const downloadLink = document.createElement('a');
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = 'none';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+</script>
+
+</body>
+</html>
