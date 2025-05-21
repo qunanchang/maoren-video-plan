@@ -96,13 +96,305 @@
         .small-text { font-size: 0.9em; color: #777; }
         .highlight { color: #c7000b; font-weight: bold;}
     </style>
+    <script>
+        async function loadSavedPlans() {
+            try {
+                const response = await fetch('/api/plans');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                const plansTableBody = document.querySelector('#savedPlansTable tbody');
+                plansTableBody.innerHTML = ''; // Clear existing rows
+
+                if (data.plans && data.plans.length > 0) {
+                    data.plans.forEach(plan => {
+                        const row = plansTableBody.insertRow();
+                        row.insertCell().textContent = plan.id;
+                        row.insertCell().textContent = plan.week_info;
+                        row.insertCell().textContent = plan.reporter_name;
+                        row.insertCell().textContent = new Date(plan.created_at).toLocaleString();
+                        const actionsCell = row.insertCell();
+                        const viewButton = document.createElement('button');
+                        viewButton.textContent = '查看详情';
+                        viewButton.onclick = () => showPlanDetails(plan);
+                        actionsCell.appendChild(viewButton);
+
+                        const loadButton = document.createElement('button');
+                        loadButton.textContent = '加载到表单';
+                        loadButton.style.marginLeft = '5px';
+                        loadButton.onclick = () => loadPlanIntoForm(plan);
+                        actionsCell.appendChild(loadButton);
+                    });
+                    document.getElementById('savedPlansSection').style.display = 'block';
+                } else {
+                    plansTableBody.innerHTML = '<tr><td colspan="5">暂无已保存的周计划。</td></tr>';
+                    document.getElementById('savedPlansSection').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading saved plans:', error);
+                alert('加载已保存的计划失败，请查看控制台获取更多信息。');
+            }
+        }
+
+        async function saveWeeklyPlan() {
+            const weekInfo = document.getElementById('weekInfoInput').value;
+            const reporterName = document.getElementById('reporterNameInput').value;
+
+            if (!weekInfo || !reporterName || weekInfo.includes("例如：") || reporterName.includes("[您的名字]")) {
+                alert('请输入有效的周次信息和制表人名称。');
+                return;
+            }
+
+            // 在这里，您需要收集 daily_tasks_data 的详细信息
+            // 这将涉及到遍历表格中的每一天、每个模块，并提取数据
+            // 为简化示例，我们暂时只发送周计划的基本信息
+            const daily_tasks_data = collectDailyTasksData();
+
+            try {
+                const response = await fetch('/api/plans', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        week_info: weekInfo, 
+                        reporter_name: reporterName,
+                        daily_tasks_data: daily_tasks_data // 实际项目中需要填充此数据
+                    }),
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert(`周计划保存成功！计划ID: ${result.planId}`);
+                    loadSavedPlans(); // Refresh the list of saved plans
+                } else {
+                    alert(`保存失败: ${result.error || '未知错误'}`);
+                }
+            } catch (error) {
+                console.error('Error saving weekly plan:', error);
+                alert('保存周计划时发生错误，请查看控制台。');
+            }
+        }
+
+        // 导出CSV功能 (保持不变或按需修改)
+        function exportTableToCSV(tableId, filename) {
+            let csv = [];
+            const table = document.getElementById(tableId);
+            const rows = table.querySelectorAll("tr");
+            
+            for (const row of rows) {
+                let rowData = [];
+                const cols = row.querySelectorAll("td, th");
+                
+                for (const col of cols) {
+                    let cellText = '';
+                    // Check for input/textarea/select within the cell for data export
+                    const inputElement = col.querySelector('input[data-export="true"], textarea[data-export="true"], select[data-export="true"]');
+                    if (inputElement) {
+                        cellText = inputElement.value;
+                    } else if (col.querySelector('input, textarea, select')) { // If elements exist but not marked for export, take direct text or skip
+                        // This part can be refined based on how you want to handle non-data-export fields
+                        cellText = col.innerText.trim(); // Fallback to innerText, might need adjustment
+                    } else {
+                        cellText = col.innerText.trim();
+                    }
+                    // Handle potential commas and quotes in cellText
+                    cellText = cellText.replace(/\n/g, " "); // Replace newlines with spaces for CSV
+                    if (cellText.includes(',')) {
+                        cellText = `"${cellText}"`;
+                    }
+                    rowData.push(cellText);
+                }
+                csv.push(rowData.join(","));
+            }
+        
+            const csvFile = new Blob(["\uFEFF" + csv.join("\n")], { type: "text/csv;charset=utf-8;" });
+            const downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+
+        function collectDailyTasksData() {
+            const tasksData = [];
+            const days = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']; // Assuming these are consistent identifiers or use a more robust way to find day rows
+            const mainTableBody = document.getElementById('weeklyPlanTable').querySelector('tbody');
+            const rows = Array.from(mainTableBody.children);
+
+            let currentDayName = '';
+            let currentDateDetail = '';
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const firstCell = row.cells[0];
+                
+                // Check if this row defines a new day
+                if (firstCell.classList.contains('date-header')) {
+                    currentDayName = firstCell.querySelector('strong').innerText.match(/星期[一二三四五六日]/)[0];
+                    currentDateDetail = firstCell.querySelector('input[data-label="日期详情"]').value;
+                }
+
+                // Skip if it's a merged row for day header or not a task row
+                if (row.cells.length < 4) continue; 
+
+                const moduleHeaderCell = row.cells[1];
+                const contentCell = row.cells[2];
+                const statusCell = row.cells[3];
+
+                const task = {
+                    day_name: currentDayName,
+                    date_detail: currentDateDetail,
+                    module_header: moduleHeaderCell.innerText.split('\n')[0].trim(), // Get only the main header text
+                    task_content: '',
+                    status: statusCell.querySelector('select') ? statusCell.querySelector('select').value : '',
+                    am_start_time: null,
+                    am_end_time: null,
+                    pm_start_time: null,
+                    pm_end_time: null,
+                    shooting_theme: null,
+                    remarks: statusCell.querySelector('textarea') ? statusCell.querySelector('textarea').value : '',
+                    shooting_details: []
+                };
+
+                // Extract times if present in module_header
+                const timeInputs = moduleHeaderCell.querySelectorAll('input[type="time"]');
+                if (moduleHeaderCell.innerText.includes('上午拍摄执行')) {
+                    if (timeInputs.length >= 2) {
+                        task.am_start_time = timeInputs[0].value;
+                        task.am_end_time = timeInputs[1].value;
+                    }
+                } else if (moduleHeaderCell.innerText.includes('下午拍摄执行')) {
+                    if (timeInputs.length >= 2) {
+                        task.pm_start_time = timeInputs[0].value;
+                        task.pm_end_time = timeInputs[1].value;
+                    }
+                }
+
+                // Extract task_content or shooting_details
+                const mainTextarea = contentCell.querySelector('textarea[data-export="true"]:not([placeholder*="款号"])'); // General task content
+                if (mainTextarea) {
+                    task.task_content = mainTextarea.value;
+                }
+
+                const shootingThemeInput = contentCell.querySelector('input[data-label="拍摄主题/系列"]');
+                if (shootingThemeInput) {
+                    task.shooting_theme = shootingThemeInput.value;
+                }
+
+                const subTable = contentCell.querySelector('.sub-table');
+                if (subTable) {
+                    const subTableRows = subTable.querySelectorAll('tbody tr');
+                    subTableRows.forEach(subRow => {
+                        const detailCells = subRow.cells;
+                        if (detailCells.length === 6) {
+                            const detail = {
+                                time_slot: moduleHeaderCell.innerText.includes('上午') ? '上午' : (moduleHeaderCell.innerText.includes('下午') ? '下午' : ''), // Infer from module header
+                                script_id: detailCells[0].querySelector('input, textarea')?.value || '',
+                                product_info: detailCells[1].querySelector('input, textarea')?.value || '',
+                                model_actor: detailCells[2].querySelector('input, textarea')?.value || '',
+                                scene_shot: detailCells[3].querySelector('input, textarea')?.value || '',
+                                props_costume: detailCells[4].querySelector('input, textarea')?.value || '',
+                                duration_keyframes: detailCells[5].querySelector('input, textarea')?.value || '',
+                            };
+                            // Only add if there's some data
+                            if (Object.values(detail).some(val => val && val.trim() !== '')) {
+                                task.shooting_details.push(detail);
+                            }
+                        }
+                    });
+                }
+                // Only add task if it has a module header (to avoid empty rows from rowspan)
+                if(task.module_header) {
+                    tasksData.push(task);
+                }
+            }
+            return tasksData;
+        }
+
+        function showPlanDetails(plan) {
+            // This function will display the full details of a plan, perhaps in a modal or a dedicated section.
+            // For now, let's just log it to console and alert.
+            console.log("Plan Details:", plan);
+            let detailsText = `计划ID: ${plan.id}\n周信息: ${plan.week_info}\n制表人: ${plan.reporter_name}\n创建于: ${new Date(plan.created_at).toLocaleString()}\n\n每日任务:\n`;
+            if (plan.daily_tasks && plan.daily_tasks.length > 0) {
+                plan.daily_tasks.forEach(task => {
+                    detailsText += `  日期: ${task.day_name} (${task.date_detail})\n`;
+                    detailsText += `    模块: ${task.module_header}\n`;
+                    if(task.task_content) detailsText += `    内容: ${task.task_content}\n`;
+                    if(task.shooting_theme) detailsText += `    主题: ${task.shooting_theme}\n`;
+                    detailsText += `    状态: ${task.status}\n`;
+                    if(task.remarks) detailsText += `    备注: ${task.remarks}\n`;
+                    if (task.shooting_details && task.shooting_details.length > 0) {
+                        detailsText += `    拍摄详情:\n`;
+                        task.shooting_details.forEach(detail => {
+                            detailsText += `      - ${detail.time_slot}: ${detail.script_id}, ${detail.product_info.substring(0,20)}...\n`;
+                        });
+                    }
+                    detailsText += '\n';
+                });
+            } else {
+                detailsText += "  (无每日任务数据)\n";
+            }
+            alert("计划详情 (部分信息在控制台):
+" + detailsText.substring(0, 500) + (detailsText.length > 500 ? "..." : ""));
+        }
+
+        function loadPlanIntoForm(plan) {
+            // This function will populate the main form with the data from the selected plan.
+            // This is a complex operation and will require careful mapping of data back to form fields.
+            alert(`加载计划ID: ${plan.id} 到表单 - 功能待实现。\n请在控制台查看计划详情。`);
+            console.log("Loading plan into form:", plan);
+            
+            document.getElementById('weekInfoInput').value = plan.week_info;
+            document.getElementById('reporterNameInput').value = plan.reporter_name;
+
+            // Clear existing dynamic rows in the main table (except headers and template rows if any)
+            // This is a placeholder for the actual logic to clear and repopulate the table.
+            // For a full implementation, you'd need to:
+            // 1. Clear the current content of the weeklyPlanTable tbody.
+            // 2. Dynamically create rows and cells based on plan.daily_tasks.
+            // 3. For each task, populate its fields (module_header, task_content, status, times, theme, remarks).
+            // 4. For each task with shooting_details, populate the sub-table.
+            // This is a significant amount of DOM manipulation.
+            console.warn("loadPlanIntoForm: Table repopulation logic is not fully implemented yet.");
+
+            // Example of how you might start repopulating (very simplified):
+            const mainTableBody = document.getElementById('weeklyPlanTable').querySelector('tbody');
+            // mainTableBody.innerHTML = ''; // Be careful, this removes everything, including static day headers if not handled.
+            // You'll need a more sophisticated way to rebuild the table structure based on the loaded plan data.
+        }
+
+    </script>
 </head>
 <body>
 
     <h1>猫人内衣抖音 - 短视频周度每日计划表 (拍摄与素材管理)</h1>
     <p style="text-align:center;" class="small-text"><strong>周次：</strong> <input type="text" class="small-text" id="weekInfoInput" value="例如：2024年第21周 (YYYY.MM.DD - YYYY.MM.DD)" style="width:300px; border:none; text-align:center;"> | <strong>制表人：</strong> <input type="text" class="small-text" id="reporterNameInput" value="[您的名字]" style="width:100px; border:none; text-align:center;"></p>
     <div class="header-controls">
-        <button onclick="exportTableToCSV('weeklyPlanTable', '猫人抖音周计划.csv')" class="export-button">导出为CSV (Excel)</button>
+        <button onclick="exportTableToCSV('weeklyPlanTable', '猫人抖音周计划.csv')" class="export-button">导出当前表格为CSV</button>
+        <button onclick="saveWeeklyPlan()" class="export-button" style="background-color: #007bff;">保存当前周计划</button> 
+        <button onclick="loadSavedPlans()" class="export-button" style="background-color: #28a745;">加载已保存的计划</button>
+    </div>
+
+    <div id="savedPlansSection" style="margin-top: 30px; display: none;">
+        <h2>已保存的周计划</h2>
+        <table id="savedPlansTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>周次信息</th>
+                    <th>制表人</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Saved plans will be loaded here -->
+            </tbody>
+        </table>
     </div>
 
     <table id="weeklyPlanTable">
